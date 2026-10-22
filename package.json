@@ -1,0 +1,10 @@
+{
+  "name": "test-epoca-encajas",
+  "version": "1.0.0",
+  "description": "Test de valores personales: descubre en qué cultura del pasado o presente habrías vivido más cómodamente.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "license": "MIT"
+}

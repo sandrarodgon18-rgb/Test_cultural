@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>¿Con qué época encajas? — Test de valores y culturas</title>
+  <meta name="description" content="Responde 12 preguntas sobre tus valores y descubre en qué cultura del pasado o de la actualidad habrías vivido más cómodamente.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#9201;</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700;6..12,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="bg" aria-hidden="true"></div>
+
+  <header class="topbar" id="topbar">
+    <img class="topbar__banner" id="banner" src="Cabecera.png" alt="¿Con qué época encajas?">
+    <div class="topbar__compact">
+      <span class="topbar__mini">¿Con qué época encajas?</span>
+      <button type="button" class="btn btn--ghost btn--small" id="btn-home" hidden>Empezar de nuevo</button>
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!-- ======== INTRO ======== -->
+    <section class="screen" id="screen-intro">
+      <div class="card intro">
+        <p class="intro__lead">
+          Un test de <strong>12 preguntas</strong> sobre política, sociedad, trabajo y naturaleza.
+          Al terminar, analizaré tus valores en <strong>6 ejes</strong> y te diré en qué
+          <strong>cultura del pasado o de la actualidad</strong> habrías vivido más cómodamente.
+        </p>
+        <ul class="intro__perks">
+          <li><span class="dot dot--orange"></span>14 culturas: de Atenas clásica a Islandia</li>
+          <li><span class="dot dot--blue"></span>Afinidad porcentual y alternativas cercanas</li>
+          <li><span class="dot dot--purple"></span>Tu perfil de valores en 6 ejes</li>
+        </ul>
+        <p class="intro__note">Tardarás unos 3 minutos. No hay respuestas correctas ni registro de datos: todo se calcula en tu navegador.</p>
+        <button type="button" class="btn btn--primary btn--big" id="btn-start">Empezar el test</button>
+      </div>
+    </section>
+
+    <!-- ======== QUIZ ======== -->
+    <section class="screen" id="screen-quiz" hidden>
+      <div class="progress">
+        <div class="progress__meta">
+          <span id="progress-label">Pregunta 1 de 12</span>
+          <span class="chip" id="question-theme">Autoridad</span>
+        </div>
+        <div class="progress__track"><div class="progress__fill" id="progress-fill"></div></div>
+      </div>
+
+      <div class="card question">
+        <h2 class="question__title" id="question-title"></h2>
+        <p class="question__text" id="question-text"></p>
+        <div class="options" id="options"></div>
+      </div>
+
+      <div class="quiz-nav">
+        <button type="button" class="btn btn--ghost" id="btn-back">← Atrás</button>
+        <span class="quiz-nav__hint">Pulsa 1–5 para responder</span>
+      </div>
+    </section>
+
+    <!-- ======== RESULTADOS ======== -->
+    <section class="screen" id="screen-result" hidden>
+      <p class="result__kicker">Tu cultura afín</p>
+
+      <div class="card card--hero" id="hero-card">
+        <div class="hero__head">
+          <span class="hero__emoji" id="hero-emoji"></span>
+          <div class="hero__title">
+            <h2 id="hero-name"></h2>
+            <p class="hero__place" id="hero-place"></p>
+          </div>
+          <div class="hero__score">
+            <span class="hero__pct" id="hero-pct">0%</span>
+            <span class="hero__pct-label">de afinidad</span>
+          </div>
+        </div>
+        <p class="hero__tagline" id="hero-tagline"></p>
+        <p class="hero__desc" id="hero-desc"></p>
+
+        <div class="why">
+          <div class="why__col why__col--fit">
+            <h3>Por qué encajarías</h3>
+            <ul id="hero-fit"></ul>
+          </div>
+          <div class="why__col why__col--friction">
+            <h3>Lo que te costaría</h3>
+            <ul id="hero-friction"></ul>
+          </div>
+        </div>
+      </div>
+
+      <p class="result__kicker result__kicker--alt">Otras culturas muy parecidas a ti</p>
+      <div class="alts" id="alts"></div>
+
+      <div class="card">
+        <h3 class="section-title">Tu perfil de valores</h3>
+        <div class="profile" id="profile"></div>
+        <p class="section-note">Cada barra va del polo izquierdo al derecho del eje. Cuanto más larga, más marcada es tu inclinación.</p>
+      </div>
+
+      <div class="card">
+        <h3 class="section-title">Ranking completo de afinidad</h3>
+        <div class="ranking" id="ranking"></div>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn btn--primary" id="btn-restart">Repetir el test</button>
+        <button type="button" class="btn btn--outline" id="btn-share">Copiar resultado</button>
+      </div>
+      <p class="share-msg" id="share-msg" hidden>Resultado copiado al portapapeles.</p>
+
+      <p class="disclaimer">Los perfiles culturales son retratos ideales y simplificados, pensados con fines de comparación, no como juicio histórico completo de ninguna época.</p>
+    </section>
+  </main>
+
+  <footer class="footer">Hecho con ilusión para viajar en el tiempo sin salir de casa · Puerto local 3013</footer>
+
+  <script src="cultures.js"></script>
+  <script src="questions.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
