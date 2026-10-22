@@ -14,12 +14,19 @@
   };
 
   /* ---------- Scoring ---------- */
+  // Preguntas 1-6 (estilo): votan por época (era A..F).
+  // Preguntas 7-12 (valores): puntúan en 3 ejes.
+
+  var AXIS_MAX_QUESTIONS = 6; // primeras 6 preguntas = épocas
+  var ERA_VOTES_MAX = 4; // cada época aparece exactamente 4 veces
 
   var axisMax = {};
   AXIS_KEYS.forEach(function (k) { axisMax[k] = 0; });
   QUESTIONS.forEach(function (q) {
+    if (!q.options[0].score) return;
     var best = {};
     q.options.forEach(function (o) {
+      if (!o.score) return;
       Object.keys(o.score).forEach(function (k) {
         best[k] = Math.max(best[k] || 0, Math.abs(o.score[k]));
       });
@@ -27,12 +34,24 @@
     Object.keys(best).forEach(function (k) { axisMax[k] += best[k]; });
   });
 
+  function eraVotes() {
+    var votes = {};
+    CULTURES.forEach(function (c) { votes[c.id] = 0; });
+    state.answers.forEach(function (optIdx, qi) {
+      if (optIdx < 0 || qi >= AXIS_MAX_QUESTIONS) return;
+      var era = QUESTIONS[qi].options[optIdx].era;
+      if (era && votes[era] !== undefined) votes[era]++;
+    });
+    return votes;
+  }
+
   function userVector() {
     var v = {};
     AXIS_KEYS.forEach(function (k) { v[k] = 0; });
     state.answers.forEach(function (optIdx, qi) {
-      if (optIdx < 0) return;
+      if (optIdx < 0 || qi < AXIS_MAX_QUESTIONS) return;
       var score = QUESTIONS[qi].options[optIdx].score;
+      if (!score) return;
       Object.keys(score).forEach(function (k) { v[k] += score[k]; });
     });
     AXIS_KEYS.forEach(function (k) {
@@ -41,7 +60,8 @@
     return v;
   }
 
-  function affinityOf(user, profile) {
+  function affinityOf(user, votes, profile) {
+    var voteRatio = (votes || 0) / ERA_VOTES_MAX;
     var sum = 0;
     AXIS_KEYS.forEach(function (k) {
       var diff = Math.abs(user[k] - profile[k]);
@@ -49,12 +69,13 @@
     });
     var closeness = sum / AXIS_KEYS.length;
     var t = Math.max(0, (closeness - 0.45) / 0.55);
-    return Math.round(100 * Math.pow(t, 0.85));
+    var valueScore = Math.pow(t, 0.85);
+    return Math.round(100 * (0.55 * voteRatio + 0.45 * valueScore));
   }
 
-  function rankCultures(user) {
+  function rankCultures(user, votes) {
     return CULTURES.map(function (c) {
-      return { culture: c, pct: affinityOf(user, c.profile) };
+      return { culture: c, pct: affinityOf(user, votes[c.id], c.profile) };
     }).sort(function (a, b) { return b.pct - a.pct; });
   }
 
@@ -124,7 +145,8 @@
 
   function renderResults() {
     var user = userVector();
-    var ranked = rankCultures(user);
+    var votes = eraVotes();
+    var ranked = rankCultures(user, votes);
     var top = ranked[0];
 
     $('hero-emoji').textContent = top.culture.emoji;
@@ -229,7 +251,7 @@
   function share() {
     if (!state.ranked) return;
     var top = state.ranked[0];
-    var text = 'Según mis valores, habría encajado mejor en ' + top.culture.name +
+    var text = 'Habría encajado mejor en ' + top.culture.name +
       ' (' + top.pct + '% de afinidad) — test "¿Con qué época encajas?"';
     var done = function () {
       var msg = $('share-msg');
